@@ -12,7 +12,10 @@ pngDataPath = r"C:\Users\matth\Documents\Python Scripts\ocr\data\pngs"
 outputTextPath = r"C:\Users\matth\Documents\Python Scripts\ocr\out\txts"
 popplerPath = r"C:\Program Files\poppler-0.68.0\bin"
 
-inputFilePath = os.path.join(inputDataPath, 'gateway.pdf')
+# For file path "data/ufo.pdf", set inputFileName to "ufo"
+inputFileName = "ufo"
+
+inputFilePath = os.path.join(inputDataPath, '%s.pdf' % inputFileName)
 print(inputFilePath)
 
 class PdfPage:
@@ -23,7 +26,7 @@ class PdfPage:
 pages = []
 images = convert_from_path(inputFilePath, 200, poppler_path = popplerPath)
 for pageNum in range(len(images)):
-    pageName = os.path.join(pngDataPath, 'gateway_%d.png' % pageNum)
+    pageName = os.path.join(pngDataPath, '%s_%d.png' % (inputFileName, pageNum))
     
     imgArray = np.array(images[pageNum])
     # Use normalization, thresholding, and image blur
@@ -41,7 +44,7 @@ for page in pages:
     print(page.pageNum, page.pngPath)
     pageArray = np.array(Image.open(page.pngPath))
     text = pytesseract.image_to_string(pageArray)
-    outFilePath = os.path.join(outputTextPath, 'gateway_%d.txt' % page.pageNum)
+    outFilePath = os.path.join(outputTextPath, '%s_%d.txt' % (inputFileName, page.pageNum))
     outFile = open(outFilePath, "w")
     outFile.write(text)
     outFile.close()
